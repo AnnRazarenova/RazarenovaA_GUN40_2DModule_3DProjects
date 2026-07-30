@@ -33,8 +33,6 @@ public class MoveRoboVac : MonoBehaviour
 
     private Rigidbody _body;
 
-    public UnityEvent OnHitsound;
-
     private void Start()
     {
         _body = GetComponent<Rigidbody>();
@@ -85,8 +83,6 @@ public class MoveRoboVac : MonoBehaviour
 
             if (_hitForward)
             {
-                OnHitsound?.Invoke();
-
                 _turnPhase = TurnPhase.TurningToWall;
                 _isTurning = true;
                 RotateLeftOrRight();
@@ -94,7 +90,6 @@ public class MoveRoboVac : MonoBehaviour
             else
             if (_hitLeft || _hitRight)
             {
-                OnHitsound?.Invoke();
                 _turnPhase = TurnPhase.TurningAway;
                 _isTurning = true;
                 RotateLeftOrRight();
