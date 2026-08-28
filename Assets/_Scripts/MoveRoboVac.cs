@@ -37,6 +37,16 @@ public class MoveRoboVac : MonoBehaviour
     {
         _body = GetComponent<Rigidbody>();
         _lastPosition = transform.position;
+
+        FreezeRotation();
+    }
+
+    private void FreezeRotation()
+    {
+        if(_body != null)
+        {
+            _body.constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX;
+        }
     }
 
     private void FixedUpdate()
@@ -46,6 +56,8 @@ public class MoveRoboVac : MonoBehaviour
         CaptureHits();
 
         DrawRay();
+        
+        _body.velocity = transform.forward * _moveSpeed;
 
         HitLogic();
     }
@@ -75,11 +87,10 @@ public class MoveRoboVac : MonoBehaviour
 
             if(_isStuck)
             {
-                RoboStuckFix();
                 return;
             }
 
-            _body.velocity = transform.forward * _moveSpeed;
+            
 
             if (_hitForward)
             {
@@ -114,7 +125,7 @@ public class MoveRoboVac : MonoBehaviour
 
             if (!hitSide)
             {
-                transform.Rotate(new Vector3(0, diraction * _turnSpeed, 0) * Time.deltaTime);
+                _body.MoveRotation(_body.rotation * Quaternion.Euler(0, diraction * _turnSpeed * Time.deltaTime, 0));
             }
             else
                 _turnPhase = TurnPhase.TurningAway;
@@ -125,7 +136,7 @@ public class MoveRoboVac : MonoBehaviour
 
             if (hitSide)
             {
-                transform.Rotate(new Vector3(0, diraction * _turnSpeed, 0) * Time.deltaTime);
+                _body.MoveRotation(_body.rotation * Quaternion.Euler(0, diraction * _turnSpeed * Time.deltaTime, 0));
             }
             else
             {
@@ -145,6 +156,7 @@ public class MoveRoboVac : MonoBehaviour
 
             if (distance < 0.001)
             {
+                RoboStuckFix();
                 _isStuck = true;
             }
         }
@@ -152,13 +164,12 @@ public class MoveRoboVac : MonoBehaviour
 
     private void RoboStuckFix()
     {
-        Debug.Log("StartFixedStuck");
         _body.velocity = Vector3.zero;
 
         RotateLeftOrRight();
         float diraction = (_turn == Turn.Right) ? 1 : -1;
 
-        float angleNeed = 30;
+        float angleNeed = 45;
 
         if (angleNeed > _angleFixRotated)
         {
@@ -173,11 +184,8 @@ public class MoveRoboVac : MonoBehaviour
         }
         else
         {
-            Debug.Log("FixedStuck");
-
             _turn = Turn.None;
             _isStuck = false;
-            _body.velocity = transform.forward * _moveSpeed;
             _angleFixRotated = 0;
             _startupTimer = 0;
         }
@@ -187,11 +195,25 @@ public class MoveRoboVac : MonoBehaviour
     {
         float random = Random.value;
 
-        if (random <= 0.5)
+        if (_hitLeft && !_hitRight)
+        {
+            _turn = Turn.Right;
+        }
+        else
+            if (!_hitLeft && _hitRight)
         {
             _turn = Turn.Left;
         }
+        else if (_hitLeft && _hitRight)
+        {
+            _turn = Random.value <= 0.5f ? Turn.Left : Turn.Right;
+        }
         else
-            _turn = Turn.Right;
+        {
+            _turn = Random.value <= 0.5f ? Turn.Left : Turn.Right;
+        }
+        
+
+        
     }
 }

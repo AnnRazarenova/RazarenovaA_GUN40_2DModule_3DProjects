@@ -3316,11 +3316,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5353225907248937323, guid: 283999d46a636524680645ad2c12b35f, type: 3}
       propertyPath: _sideRayDistance
-      value: 0.25
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 5353225907248937323, guid: 283999d46a636524680645ad2c12b35f, type: 3}
       propertyPath: _forwardRayDistance
-      value: 0.25
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5591865513666974039, guid: 283999d46a636524680645ad2c12b35f, type: 3}
+      propertyPath: _trashMask.m_Bits
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 8365076933490371983, guid: 283999d46a636524680645ad2c12b35f, type: 3}
       propertyPath: m_LocalPosition.x

@@ -2,12 +2,7 @@ using UnityEngine;
 
 public class CleanFloor : MonoBehaviour
 {
-    private LayerMask _trashMask;
-
-    private void Start()
-    {
-        _trashMask = 1 << LayerMask.NameToLayer("Trash");
-    }
+    [SerializeField]private LayerMask _trashMask;
 
     private void OnTriggerEnter(Collider other)
     {
